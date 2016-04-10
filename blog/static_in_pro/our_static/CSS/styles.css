@@ -1,0 +1,30 @@
+
+.addBtn{
+    position: fixed;
+    right: 15px;
+    bottom: 30px;
+    color: white;
+    background-color: #004080;
+
+    margin: 0;
+    padding: 10px;
+    z-index: 1;
+    list-style: none;
+}
+
+
+
+a:link
+{
+
+}
+
+.addBtn:hover
+{
+    color: white;
+      background: #0080FF;
+
+
+}
+
+

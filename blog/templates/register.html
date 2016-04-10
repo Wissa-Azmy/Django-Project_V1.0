@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+            <form class="horizontal-form" id="user_form" method="post" action="{% url 'articles:register' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="container">
+                    <div class="row">
+                        <div class="fields">
+                            {% crispy user_form %}
+
+                            <!--<div class="g-recaptcha" data-sitekey="6LejwRwTAAAAAJej8DGXvOU1EJ7AmqeU5Z827Esj"></div> -->
+
+                            {{  profile_form.as_p }}
+
+                            <!-- Provide a button to click to submit the form -->
+                            <input class="btn btn-primary" type="submit" name="submit" value="Register" />
+                            <input class="btn btn-primary" type="Reset" name="reset" value="Reset" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <a href="">or register with facebook</a>
+
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+<!-- DOCTYPE html -->
+
+
+
+
+  	<!-- verbatism %}:   This to display the next block as an HTML entity without any rendering-->
+{% block content %}
+<form method="POST" action="" enctype="multipart/form-data" class="form">{%csrf_token%}
+
+{{form.as_p}}
+<input type="submit" class="btn btn-primary"></input>
+
+</form>
+      <hr class="featurette-divider">
+
+{% endblock %}

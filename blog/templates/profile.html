@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+	{% load crispy_forms_tags %}
+	{% load staticfiles %}
+	<title>Profile</title>
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+	<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+djkhfkdsjflkjsdlkjfl
+
+{%block content%}
+
+	<form>
+		{% csrf_token %} 
+
+		<img src= '{{ image.url }}' width="300" height="200"/>   
+		<br/>
+
+
+		</br>
+		<label for="user">Username :</label>
+		<input type="text" class="form-control" name="user" id="username" value="{{ user.username }}" disabled="true" /><br />
+		<label  for="fname">First Name :</label>
+		<input class="form-control" type="text" name="fname" id="fname" value="{{ user.first_name }}" disabled="true" /><br />
+		<label for="lname">Last Name :</label>
+		<input class="form-control" type="text" name="lname" id="lname" value="{{ user.last_name }}" disabled="true" /><br />
+		<label  for="email">Email :</label>
+		<input class='form-control' type="text" name="email" id="email" value="{{ user.email }}" disabled="true" /><br />
+
+		<a class="btn btn-primary" href="{%  url 'articles:editProfile' %}">Edit Profile </a>
+		<br/>	<br/>	<br/>
+		<a class="btn btn-success" href="{%  url 'articles:logout' %}">Log out </a>
+
+		<br/>
+	</form>
+{% endblock %}
+	</div>
+}
+</body>
+</html>

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+      
+      {% for user in users %}
+
+        <div class="col-lg-3">
+          <img class="img-circle" src="{{user.image.url}}" alt="Generic placeholder image" width="140" height="140">
+          <h2>{{user.user.first_name}} {{user.user.last_name}}</h2>
+          <p>
+              {{user.user.email}}
+          </p>
+          <p><a class="btn btn-default" href="#" role="button">View Articles &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+          
+      {% endfor %} 
+
+      </div><!-- /.ro -->
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider">
+
+    {% for article in articles %}
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.article_title}}</a></h2><small>{{article.article_add_date|timesince}} ago</small><br />
+          {% if article.article_author.get_full_name %}
+          <p>Author: {{article.article_author.get_full_name}} </p>
+          {% else %}
+          <p>Author: {{article.article_author.get_full_name}} </p>
+          {% endif %}
+
+          <h3><span class="text-muted">{{article.article_desc}}</span></h3>
+          <p class="lead">{{article.article_body|linebreaks|truncatechars:120}}</p>
+
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" src="{% if article.article_img %} {{article.article_img.url}} {% endif %}" alt="Generic placeholder image">
+        </div>
+        <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+
+    </div>      
+
+      <hr class="featurette-divider">
+
+    {% endfor %}
+
+
+<nav>
+  
+<div class="pagination">
+
+    <span class="step-links">
+    <ul class="pager">
+        {% if articles.has_previous %}
+           <li> <a href="?page={{ articles.previous_page_number }}">previous</a></li>
+        {% endif %}
+
+        <span class="current">
+            Page {{ articles.number }} of {{ articles.paginator.num_pages }}.
+        </span>
+
+        {% if articles.has_next %}
+            <li> <a href="?page={{ articles.next_page_number }}">next</a></li>
+        {% endif %}
+      </ul>
+    </span>
+</div>
+</nav>
+
+    <a href="{% url 'articles:create' %}" class="btn menu addBtn js-jumbo" id="addProductBtn">+ Add Article</a>
+
+{% endblock content %}
+
+
+
+
+      <!-- <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
+          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+      </div>
+
+      <hr class="featurette-divider"> -->
+
+      <!-- /END THE FEATURETTES -->

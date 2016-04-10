@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block tab_title %}
+{{instance.article_title}} | {{block.super}}
+{% endblock tab_title %}
+
+{% block content %}
+{% if messages %}
+<ul class = "messages">
+	{% for message in messages %}
+	<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	{% endfor %}
+</ul>
+{% endif %}
+<div class="col-sm-2 ">
+        <p><a class="btn btn-default" href="{% url 'articles:update' id=instance.id %}" role="button">Edit Article &raquo;</a></p>
+        <p><a class="btn btn-default" href="{% url 'articles:delete' id=instance.id %}" role="button">Delete Article &raquo;</a></p>
+</div>
+
+
+<div class='col-sm-6 col-sm-offset-1'>
+	<style type="text/css">
+	.article-title{
+		display: inline;
+	}
+	</style>
+		<h1 class="article-title">{{instance.article_title}}</h1>
+		<h3><small>{{instance.article_add_date|timesince}} ago<br /></small></h3>
+
+		<img class="featurette-image img-responsive center-block" src="{% if instance.article_img %} {{instance.article_img.url}} {% endif %}" alt="Generic placeholder image">
+
+	<h2>{{instance.article_desc}}</h2><br />
+	{{instance.article_body|linebreaks}}<br />
+	
+	Last Update: {{instance.article_update_date|timesince}}<br />
+
+	<p><div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div></p>
+
+	<div class="fb-comments"></div>
+
+</div>
+	
+{% endblock %}
+
+
