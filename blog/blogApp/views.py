@@ -48,11 +48,13 @@ def home(request):
     inc = 2
 
     if request.user.is_authenticated():
+        userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
         msg = 'Welcome %s' %(request.user)
         context = {
             'home' : True,
             'title': title,
             'users': users_list,
+            'loggedUser': userDetail,
             'articles': articles_list,
             'i': inc,
             # 'recent': posts,
@@ -76,6 +78,7 @@ def article_create(request):
     if not request.user.is_authenticated():
         raise Http404
     form = ArticleUserForm(request.POST or None, request.FILES or None)
+    userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
 
     if form.is_valid():
         instance = form.save(commit=False)
@@ -85,7 +88,8 @@ def article_create(request):
         return HttpResponseRedirect(instance.get_absolute_url())
         
     context = {
-        'form': form
+        'form': form,
+        'loggedUser': userDetail,
     }
     return render(request, "article_form.html", context)
 
@@ -93,9 +97,12 @@ def article_create(request):
 
 def article_details(request, id):
     instance = get_object_or_404(Article, id=id)
+    if request.user.is_authenticated():
+        userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
     context = {
         'title': "Details Page",
         'instance': instance,
+        'loggedUser': userDetail,
     }
     return render(request, "article_details.html", context)
 
@@ -106,6 +113,7 @@ def article_update(request, id=None):
     if not request.user.is_staff or not request.user.is_superuser:
         raise Http404
     instance = get_object_or_404(Article, id=id)
+    userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
 
     form = ArticleForm(request.POST or None, request.FILES or None, instance=instance)
     if form.is_valid():
@@ -118,6 +126,7 @@ def article_update(request, id=None):
         'title': "Update Page",
         'instance': instance,
         'form': form,
+        'loggedUser': userDetail,
     }
     return render(request, "article_form.html", context)
 
@@ -215,7 +224,9 @@ def logout(request):
 @login_required
 def user_profile(request):
     userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
-    return render_to_response('profile.html',{'image':userDetail.image },context_instance=RequestContext(request))
+    return render_to_response('profile.html',{'image':userDetail.image, 'loggedUser': userDetail},context_instance=RequestContext(request))
+
+#---------------------------- Edit Profile -----------------------#
 
 @login_required
 def editProfile(request):
@@ -232,6 +243,7 @@ def editProfile(request):
         'image':userDetail.image,
         'form1':form1 ,
         'form2':form2 ,
+        'loggedUser': userDetail,
     }
     #form3=UserProfileForm(request.POST,instance=request.user)
 

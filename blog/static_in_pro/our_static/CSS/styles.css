@@ -22,8 +22,15 @@ a:link
 .addBtn:hover
 {
     color: white;
-      background: #0080FF;
+    background: #0080FF;
 
+
+}
+
+#profile-img {
+    margin: 0px;
+    height: 25px;
+    width: 25px;
 
 }
 

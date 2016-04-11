@@ -1,29 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
+{% extends 'base.html' %}
 	{% load crispy_forms_tags %}
 	{% load staticfiles %}
-	<title>Edit Profile</title>
-	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
-	<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
-	<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-	<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
-	<script src="{% static 'js/bootstrap.js' %}"></script>
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
-</head>
-<body>
-<div class="container">
 
+{% block content %}
 	<form action="{%  url 'articles:editProfile' %}" method="post"  enctype="multipart/form-data" >
 		{% csrf_token %} 
 		<div class="fields">
 			{% crispy form1 %}
 			{{ form2.as_p }}
-			<img src= '{{ image.url }}' width="300" height="200"/>  
+			<img src= '{{ image.url }}' width="300" height="200"/><br /><br />  
 			<input class="btn btn-primary" type="submit" value="Save Edit Profile" id="save" />
 		</div>
 		 
 	</form>
-	</div>
-</body>
-</html>
+{% endblock %}
