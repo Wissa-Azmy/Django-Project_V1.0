@@ -26,12 +26,12 @@
                     <li><a href="{% url 'articles:profile' %}">Profile</a></li>
                     <li><a href="#">My Posts</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="{% url 'articles:logout' %}">Log out</a></li>
+                    <li><a href="/accounts/logout/">Log out</a></li>
                   </ul>
-                </li>
-                {% else  %}
+                </li> 
+                {% else  %} 
                 <li>
-                  <a href="{% url 'articles:facelogin' %}"  aria-expanded="true">Login |</a></li><li><a href="{% url 'articles:register' %}"  aria-expanded="true">Sign Up</a></li>
+                  <a href="/accounts/login/"  aria-expanded="true">Login |</a></li><li><a href="{% url 'articles:register' %}"  aria-expanded="true">Sign Up</a></li>
                 
                 {% endif %}
               </ul>
