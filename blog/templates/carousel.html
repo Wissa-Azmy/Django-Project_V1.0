@@ -8,8 +8,29 @@
         <li data-target="#myCarousel" data-slide-to="2"></li>
       </ol>
       <div class="carousel-inner" role="listbox">
-      
+
+    {% for article in articles %}
+      {% if forloop.first %}
         <div class="item active">
+      {% else %}
+        <div class="item">
+      {% endif %}
+          <img class="first-slide" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="First slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>{{article.title}}</h1>
+              <p>{{article.body}}</p>
+              <p><a class="btn btn-lg btn-primary" href="{{article.get_absolute_url}}" role="button">View Article</a></p>
+            </div>
+          </div>
+        </div>
+        
+
+        
+
+      {% endfor %}
+      
+        <!-- <div class="item active">
           <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
           <div class="container">
             <div class="carousel-caption">
@@ -40,7 +61,7 @@
               <p><a class="btn btn-lg btn-primary" href="#" role="button">Browse gallery</a></p>
             </div>
           </div>
-        </div>
+        </div> -->
 
       </div>
       <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">

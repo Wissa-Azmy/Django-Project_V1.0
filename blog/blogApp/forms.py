@@ -23,13 +23,13 @@ class ArticleForm(forms.ModelForm):
 
     class Meta:
         model = Article
-        fields = ['article_title', 'article_desc', 'article_body', 'article_img', 'article_status', 'article_author', 'article_tags']
+        fields = ['title', 'description', 'body', 'image', 'approved', 'publish', 'tags']
 
 class ArticleUserForm(forms.ModelForm):
     # read_later = forms.ModelMultipleChoiceField(widget=forms.CheckboxInput())
     class Meta:
         model = Article
-        fields = ['article_title', 'article_desc', 'article_body', 'article_img', 'article_status', 'article_tags']
+        fields = ['title', 'description', 'body', 'image', 'publish', 'tags']
 
 
 # class UserEditForm(MultiForm):

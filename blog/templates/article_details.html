@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block tab_title %}
-{{instance.article_title}} | {{block.super}}
+{{instance.title}} | {{block.super}}
 {% endblock tab_title %}
 
 {% block content %}
@@ -12,10 +12,23 @@
 	{% endfor %}
 </ul>
 {% endif %}
-<div class="col-sm-2 ">
+
+
+
+{% if user.is_staff or user.is_superuser %}
+<div class="col-sm-1 ">
         <p><a class="btn btn-default" href="{% url 'articles:update' id=instance.id %}" role="button">Edit Article &raquo;</a></p>
         <p><a class="btn btn-default" href="{% url 'articles:delete' id=instance.id %}" role="button">Delete Article &raquo;</a></p>
 </div>
+
+{% else %}
+
+	{% if loggedUser.id == instance.id %}
+		<p><a class="btn btn-default" href="{% url 'articles:update' id=instance.id %}" role="button">Edit User Article &raquo;</a></p>
+	{% endif %}
+	
+{% endif %}
+
 
 
 <div class='col-sm-6 col-sm-offset-1'>
@@ -24,19 +37,47 @@
 		display: inline;
 	}
 	</style>
-		<h1 class="article-title">{{instance.article_title}}</h1>
-		<h3><small>{{instance.article_add_date|timesince}} ago<br /></small></h3>
+		<h1 class="article-title">{{instance.title}}</h1>
+		<h3><small>{{instance.publish_date|timesince}} ago<br /></small></h3>
 
-		<img class="featurette-image img-responsive center-block" src="{% if instance.article_img %} {{instance.article_img.url}} {% endif %}" alt="Generic placeholder image">
+		<img class="featurette-image img-responsive center-block" src="{% if instance.image %} {{instance.image.url}} {% endif %}" alt="Generic placeholder image">
 
-	<h2>{{instance.article_desc}}</h2><br />
-	{{instance.article_body|linebreaks}}<br />
+	<h2>{{instance.description}}</h2><br />
+	{{instance.body|linebreaks}}<br />
 	
-	Last Update: {{instance.article_update_date|timesince}}<br />
+	Last Update: {{instance.update_date|timesince}}<br />
 
 	<p><div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div></p>
 
 	<div class="fb-comments"></div>
+
+</div>
+
+
+
+<div class='col-sm-3 col-sm-offset-1'>
+<h2> Related Articles: </h2>
+{% for related_article in related_articles %}
+
+		<h3 class="featurette-heading"><a href="{% url 'articles:details' id=related_article.id %}">{{related_article.title}}</a></h3>
+
+		<h5><small>{{related_article.publish_date|timesince}} ago<br /></small></h5>
+
+	<h4>{{related_article.description}}</h4><br />
+
+	
+	Last Update: {{related_article.update_date|timesince}}<br />
+
+	<p><div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div></p>
+
+	<div class="fb-comments"></div>
+
+
+
+      <hr class="featurette-divider">
+
+
+{% endfor %}
 
 </div>
 	

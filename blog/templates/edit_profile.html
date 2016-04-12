@@ -7,7 +7,7 @@
 		{% csrf_token %} 
 		<div class="fields">
 			{% crispy form1 %}
-			{{ form2.as_p }}
+			{{ form2| crispy }}
 			<img src= '{{ image.url }}' width="300" height="200"/><br /><br />  
 			<input class="btn btn-primary" type="submit" value="Save Edit Profile" id="save" />
 		</div>

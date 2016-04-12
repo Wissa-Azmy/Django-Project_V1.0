@@ -25,9 +25,9 @@ urlpatterns = [
     url(r'^(?P<id>\d+)/delete/$', article_delete, name='delete'),
     url(r'^register$', register, name='register'),
     url(r'^login$', login, name='login'),
-    # url(r'^accounts/login/$', name='facelogin'),
     url(r'^auth_login$', auth_view, name='login_auth'),
     url(r'^profile$', user_profile, name='profile'),
     url(r'^editProfile$', editProfile, name='editProfile'),
+    url(r'^userArticles$', userArticles, name='userArticles'),
     url(r'^logout$', logout, name='logout'),	
 ]

@@ -18,15 +18,21 @@ def make_regular(modeladmin, request, queryset):
     queryset.update(role='R')
 make_regular.short_description = "Make Regular"
 
-def make_published(modeladmin, request, queryset):
-    queryset.update(article_status='P')
-make_published.short_description = "Mark as Published"
 
-	
+
+def approve(modeladmin, request, queryset):
+    queryset.update(approved=True)
+approve.short_description = "Approve"
+
+def publish(modeladmin, request, queryset):
+    queryset.update(publish=True)
+publish.short_description = "Publish"
 
 def make_draft(modeladmin, request, queryset):
-    queryset.update(article_status='R')
-make_draft.short_description = "Mark as Draft"
+    queryset.update(publish=False)
+make_draft.short_description = "Make Draft"
+
+
 
 
 class UserProfileInline(admin.StackedInline):
@@ -44,13 +50,13 @@ class UserAdmin(UserAdmin):
     
 
 class ArticleAdmin(admin.ModelAdmin):
-    list_display = ['article_title', 'article_desc', 'article_img', 'article_status', 'article_author']
-    list_display_links = ['article_desc', 'article_img']
-    list_editable = ['article_title']
-    list_filter = ['article_add_date', 'article_update_date', 'article_status', 'article_tags']
-    search_fields = ['article_title', 'article_desc','article_body']
+    list_display = ['title', 'description', 'image', 'approved', 'publish', 'author']
+    list_display_links = ['description', 'image']
+    list_editable = ['title']
+    list_filter = ['publish_date', 'update_date', 'approved', 'publish', 'tags']
+    search_fields = ['title', 'description','body']
     form = ArticleForm
-    actions = [make_published, make_draft]
+    actions = [approve, publish, make_draft]
 
 
 

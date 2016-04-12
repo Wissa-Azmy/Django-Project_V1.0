@@ -29,7 +29,7 @@ import os ,string
 
 def home(request):
 
-    articles_list = Article.objects.all().order_by("-article_add_date")
+    articles_list = Article.objects.all().order_by("-publish_date")
     users_list = UserProfile.objects.all()
     paginator = Paginator(articles_list, 5) # Show 5 Articles per page
 
@@ -44,33 +44,58 @@ def home(request):
         articles_list = paginator.page(paginator.num_pages)
 
 
-    title = "This is the Home page"
-    inc = 2
-
     if request.user.is_authenticated():
         userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
-        msg = 'Welcome %s' %(request.user)
+
         context = {
             'home' : True,
-            'title': title,
             'users': users_list,
             'loggedUser': userDetail,
             'articles': articles_list,
-            'i': inc,
-            # 'recent': posts,
-    #        'user' : user  / this doesn't work here it works directly in the HTML {{user}}
         }
     else:
         context = {
             'home' : True,
-            'title': title,
             'users': users_list,
             'user': 'Login',
             'articles': articles_list,
-            'i': inc,
+
         }
     
     return render(request, "home.html", context)
+
+
+
+
+def userArticles(request):
+
+    userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
+    articles_list = Article.objects.filter(author= request.session['_auth_user_id']).order_by("-publish_date")
+    paginator = Paginator(articles_list, 5) # Show 5 Articles per page
+
+    page = request.GET.get('page')
+    try:
+        articles_list = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        articles_list = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        articles_list = paginator.page(paginator.num_pages)
+
+
+    inc = 2
+
+    context = {
+
+        'loggedUser': userDetail,
+        'articles': articles_list,
+        'i': inc,
+        # 'recent': posts,
+#        'user' : user  / this doesn't work here it works directly in the HTML {{user}}
+    }
+    
+    return render(request, "user_articles.html", context)
 
 
 
@@ -82,7 +107,7 @@ def article_create(request):
 
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.article_author = request.user
+        instance.author = request.user
         instance.save()
         messages.success(request, "Article Successfully Created")
         return HttpResponseRedirect(instance.get_absolute_url())
@@ -97,12 +122,29 @@ def article_create(request):
 
 def article_details(request, id):
     instance = get_object_or_404(Article, id=id)
+
+    related_entries = Article.objects.filter(
+        tags__tag_name__in=list(instance.tags.values_list('tag_name', flat=True))
+    ).exclude(id=instance.id)
+
     if request.user.is_authenticated():
+        print request.user.id
         userDetail = UserProfile.objects.get(user_id=request.session['_auth_user_id'])
+        # if instance.publish == False  or instance.approved == False:
+        #     if not request.user.is_staff or not request.user.is_superuser:
+        #         raise Http404
+
+    else:
+        userDetail = ''
+        if not instance.approved or not instance.publish:
+            raise Http404
+
+        
     context = {
         'title': "Details Page",
         'instance': instance,
         'loggedUser': userDetail,
+        'related_articles': related_entries,
     }
     return render(request, "article_details.html", context)
 

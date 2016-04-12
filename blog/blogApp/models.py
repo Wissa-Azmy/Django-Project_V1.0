@@ -40,28 +40,29 @@ def get_sentinel_user():
     return get_user_model().objects.get_or_create(username='deleted')[0]
 
 class Article(models.Model):
-    STATUS = (
-                   ('R', 'DRAFT'),
-                   ('P', 'PUBLISHED'),
-                   ('A', 'APPROVED'),
-                   ('D', 'DELETED'),
-                   )
-    article_title = models.CharField(max_length=100)
-    article_desc = models.CharField(max_length=100,null=False,blank=True)
-    article_body = models.TextField(max_length=200,null=False,blank=True)
-    article_img = models.FileField(null=True, blank=True)
+    # STATUS = (
+    #                ('R', 'DRAFT'),
+    #                ('P', 'PUBLISHED'),
+    #                ('A', 'APPROVED'),
+    #                ('D', 'DELETED'),
+    #                )
+    title = models.CharField(max_length=100)
+    description = models.CharField(max_length=100,null=False,blank=True)
+    body = models.TextField(max_length=200,null=False,blank=True)
+    image = models.FileField(null=True, blank=True)
     # article_img = models.ImageField(upload_to="images_folder/articles/", default='images_folder/none/no-img.jpg',null=False,blank=True)
-    article_add_date = models.DateTimeField(auto_now_add=True, auto_now=False)
-    article_update_date = models.DateField(auto_now_add=False, auto_now=True)
-    # article_published = models.BooleanField(default=False)
-    article_status = models.CharField(max_length=30, choices=STATUS, default='R')
-    article_tags = models.ManyToManyField(Tag)
+    publish_date = models.DateTimeField(auto_now_add=True, auto_now=False)
+    update_date = models.DateField(auto_now_add=False, auto_now=True)
+    publish = models.BooleanField(default=False)
+    # status = models.CharField(max_length=30, choices=STATUS, default='R')
+    approved = models.BooleanField(default=False)
+    tags = models.ManyToManyField(Tag)
     read_later = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='readlater+')
-    article_author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET(get_sentinel_user), default=1)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET(get_sentinel_user), default=1)
 
     # article_readlater = models.ManyToManyField(User)
     def __str__(self):
-        return self.article_title
+        return self.title
 
     def get_absolute_url(self):
         return reverse("articles:details", kwargs={'id': self.id})

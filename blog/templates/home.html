@@ -6,15 +6,15 @@
       <!-- Three columns of text below the carousel -->
       <div class="row">
       
-      {% for user in users %}
+      {% for topUser in users %}
 
-        <div class="col-lg-3">
-          <img class="img-circle" src="{{user.image.url}}" alt="Generic placeholder image" width="140" height="140">
-          <h2>{{user.user.first_name}} {{user.user.last_name}}</h2>
+        <div class="col-lg-2">
+          <img class="img-circle" src="{{topUser.image.url}}" alt="Generic placeholder image" width="140" height="140">
+          <h2>{{topUser.user.first_name}}</h2>
           <p>
-              {{user.user.email}}
+              {{topUser.user.email}}
           </p>
-          <p><a class="btn btn-default" href="#" role="button">View Articles &raquo;</a></p>
+          <p><a class="btn btn-default" href="{% url 'articles:userArticles' %}" role="button">View Articles &raquo;</a></p>
         </div><!-- /.col-lg-4 -->
           
       {% endfor %} 
@@ -25,30 +25,170 @@
 
       <hr class="featurette-divider">
 
+{% if not user.is_staff or not user.is_superuser %}
     {% for article in articles %}
-      <div class="row featurette">
+    {% if article.publish and article.approved %}
+
+  {% if forloop.counter|divisibleby:2 %}
+<div class="row featurette">
         <div class="col-md-7">
-          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.article_title}}</a></h2><small>{{article.article_add_date|timesince}} ago</small><br />
-          {% if article.article_author.get_full_name %}
-          <p>Author: {{article.article_author.get_full_name}} </p>
-          {% else %}
-          <p>Author: {{article.article_author.get_full_name}} </p>
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.title}}</a></h2>
+          <small>{{article.publish_date|timesince}} ago</small><br />
+          {% if article.author.get_full_name %}
+              <p>Author: {{article.author.get_full_name}} </p>
+              {% else %}
+              <p>Author: {{article.author.get_full_name}} </p>
           {% endif %}
 
-          <h3><span class="text-muted">{{article.article_desc}}</span></h3>
-          <p class="lead">{{article.article_body|linebreaks|truncatechars:120}}</p>
+          <h3><span class="text-muted">{{article.description}}</span></h3>
+          <p class="lead">{{article.body|linebreaks|truncatechars:120}}</p>
+        <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
 
         </div>
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" src="{% if article.article_img %} {{article.article_img.url}} {% endif %}" alt="Generic placeholder image">
+          <img class="featurette-image img-responsive center-block" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="Generic placeholder image">
         </div>
-        <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+    
 
     </div>      
 
       <hr class="featurette-divider">
 
+{% else %}
+
+      <div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.title}}</a></h2>
+          <small>{{article.publish_date|timesince}} ago</small><br />
+          {% if article.author.get_full_name %}
+              <p>Author: {{article.author.get_full_name}} </p>
+              {% else %}
+              <p>Author: {{article.author.get_full_name}} </p>
+          {% endif %}
+
+          <h3><span class="text-muted">{{article.description}}</span></h3>
+          <p class="lead">{{article.body|linebreaks|truncatechars:120}}</p>
+        <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="Generic placeholder image">
+        </div>
+    
+
+    </div>      
+
+      <hr class="featurette-divider">
+      {% endif %}
+      {% endif %}
     {% endfor %}
+
+{% else %}
+
+  {% for article in articles %}
+
+
+  {% if forloop.counter|divisibleby:2 %}
+
+<div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.title}}</a></h2>
+          {% if article.publish %}
+
+              {% if article.approved %}
+              <span style="color:lightgreen;"><b>Approved: </b></span>
+              {% else %}
+              <span style="color:orange;"><b>Not Approved: </b></span>
+              {% endif %}
+
+          <span style="color:green;"><b>Published: </b></span>
+          {% else %}
+
+              {% if article.approved %}
+              <span style="color:lightgreen;"><b>Approved: </b></span>
+              {% else %}
+              <span style="color:orange;"><b>Not Approved: </b></span>
+              {% endif %}
+
+          <span style="color:red;"><b>Draft: </b></span>
+          {% endif %}
+
+          <small>{{article.publish_date|timesince}} ago</small><br />
+          {% if article.author.get_full_name %}
+          <p>Author: {{article.author.get_full_name}} </p>
+          {% else %}
+          <p>Author: {{article.author.get_full_name}} </p>
+          {% endif %}
+
+          <h3><span class="text-muted">{{article.description}}</span></h3>
+          <p class="lead">{{article.body|linebreaks|truncatechars:120}}</p>
+ <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="Generic placeholder image">
+        </div>
+       
+    
+
+    </div>      
+
+      <hr class="featurette-divider">
+
+      {% else %}
+
+    
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.title}}</a></h2>
+          {% if article.publish %}
+
+              {% if article.approved %}
+              <span style="color:lightgreen;"><b>Approved: </b></span>
+              {% else %}
+              <span style="color:orange;"><b>Not Approved: </b></span>
+              {% endif %}
+
+            <span style="color:green;"><b>Published: </b></span>
+          {% else %}
+
+              {% if article.approved %}
+              <span style="color:lightgreen;"><b>Approved: </b></span>
+              {% else %}
+              <span style="color:orange;"><b>Not Approved: </b></span>
+              {% endif %}
+
+            <span style="color:red;"><b>Draft: </b></span>
+          {% endif %}
+
+          <small>{{article.publish_date|timesince}} ago</small><br />
+
+          {% if article.author.get_full_name %}
+              <p>Author: {{article.author.get_full_name}} </p>
+              {% else %}
+              <p>Author: {{article.author.get_full_name}} </p>
+          {% endif %}
+
+          <h3><span class="text-muted">{{article.description}}</span></h3>
+          <p class="lead">{{article.body|linebreaks|truncatechars:120}}</p>
+<p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="Generic placeholder image">
+        </div>
+        
+    
+
+    </div>      
+
+      <hr class="featurette-divider">
+
+{% endif %}
+      
+
+
+    {% endfor %}
+
+{% endif %}
 
 
 <nav>

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+      <hr class="featurette-divider">
+
+    {% for article in articles %}
+
+    {% if forloop.counter|divisibleby:2 %}
+
+<div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.title}}</a></h2>
+          <small>
+          {% if article.publish %}
+          <span style="color:green;"><b>Published: </b></span>
+          {% else %}
+          <span style="color:red;"><b>Draft: </b></span>
+          {% endif %}
+          </small>
+          <small>{{article.publish_date|timesince}} ago</small><br />
+          {% if article.author.get_full_name %}
+          <p>Author: {{article.author.get_full_name}} </p>
+          {% else %}
+          <p>Author: {{article.author.get_full_name}} </p>
+          {% endif %}
+
+          <h3><span class="text-muted">{{article.description}}</span></h3>
+          <p class="lead">{{article.body|linebreaks|truncatechars:120}}</p>
+
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="Generic placeholder image">
+        </div>
+        <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+    
+
+    </div>      
+
+      <hr class="featurette-divider">
+
+
+
+{% else %}
+
+      <div class="row featurette">
+        <div class="col-md-7">
+          <h2 class="featurette-heading"><a href="{% url 'articles:details' id=article.id %}">{{article.title}}</a></h2>
+          <small>
+          {% if article.publish %}
+          <span style="color:green;"><b>Published: </b></span>
+          {% else %}
+          <span style="color:red;"><b>Draft: </b></span>
+          {% endif %}
+          </small>
+          <small>{{article.publish_date|timesince}} ago</small><br />
+          {% if article.author.get_full_name %}
+          <p>Author: {{article.author.get_full_name}} </p>
+          {% else %}
+          <p>Author: {{article.author.get_full_name}} </p>
+          {% endif %}
+
+          <h3><span class="text-muted">{{article.description}}</span></h3>
+          <p class="lead">{{article.body|linebreaks|truncatechars:120}}</p>
+
+        </div>
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive center-block" src="{% if article.image %} {{article.image.url}} {% endif %}" alt="Generic placeholder image">
+        </div>
+        <p><a class="btn btn-default" href="{{article.get_absolute_url}}" role="button">View details &raquo;</a></p>
+    
+
+    </div>      
+
+      <hr class="featurette-divider">
+
+{% endif %}
+    {% endfor %}
+
+
+<nav>
+  
+<div class="pagination">
+
+    <span class="step-links">
+    <ul class="pager">
+        {% if articles.has_previous %}
+           <li> <a href="?page={{ articles.previous_page_number }}">previous</a></li>
+        {% endif %}
+
+        <span class="current">
+            Page {{ articles.number }} of {{ articles.paginator.num_pages }}.
+        </span>
+
+        {% if articles.has_next %}
+            <li> <a href="?page={{ articles.next_page_number }}">next</a></li>
+        {% endif %}
+      </ul>
+    </span>
+</div>
+</nav>
+
+    <a href="{% url 'articles:create' %}" class="btn menu addBtn js-jumbo" id="addProductBtn">+ Add Article</a>
+
+{% endblock content %}
+
